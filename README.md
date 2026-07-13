@@ -28,7 +28,7 @@ Then open `http://localhost:8080`.
 
 ## Before going live
 
-- **Domain**: meta tags, canonical links, JSON-LD, and `sitemap.xml` currently use the placeholder domain `https://tulipsoven.com` — replace with the real domain once one is registered.
+- **Domain**: `tulipsoven.com` is the confirmed domain — already used consistently in meta tags, canonical links, JSON-LD, and `sitemap.xml`.
 - **Photos**: all product/hero/gallery images are placeholder slots. Drop real photos into `images/` using the filenames listed in `images/README.txt`.
 - **WhatsApp ordering number** is already set to the real number (9560709231) across all order buttons and the JSON-LD contact field.
 
