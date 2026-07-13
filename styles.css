@@ -244,6 +244,7 @@ details.nav-mobile-details > summary::-webkit-details-marker { display: none; }
 
 .cart-control { margin-top: 2px; }
 .cart-stepper { display: flex; align-items: center; gap: 12px; }
+.cart-stepper[hidden] { display: none; }
 .cart-stepper button {
   width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--maroon); background: var(--bg);
   color: var(--maroon); font-size: 15px; line-height: 1; cursor: pointer; display: flex; align-items: center;
