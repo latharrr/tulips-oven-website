@@ -201,6 +201,8 @@
       if (Object.keys(cart).length === 0) return;
       var msg = buildWhatsAppMessage();
       window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+      clearCart();
+      closeCart();
       return;
     }
   });
