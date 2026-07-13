@@ -88,6 +88,7 @@ a { color: inherit; }
   font-weight: 600; letter-spacing: .02em; transition: transform .25s ease, background .25s ease;
   will-change: transform;
 }
+.btn[hidden] { display: none; }
 .btn-solid {
   background: var(--maroon); color: var(--bg);
 }
