@@ -41,6 +41,10 @@
         </nav>
       </details>
       <a href="/" class="brand"><img class="brand-logo" src="../images/logo-header.jpg" alt="Tulip's Oven"></a>
+      <button type="button" class="cart-btn" data-cart-open aria-label="View cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
+        <span class="cart-badge"></span>
+      </button>
       <a href="https://wa.me/919560709231" target="_blank" rel="noopener" class="btn btn-solid nav-order-btn">Order</a>
     </div>
   </div>
@@ -55,6 +59,10 @@
       <a href="/#gallery" class="nav-link">Gallery</a>
       <a href="/#contact" class="nav-link">Contact</a>
       <a href="/blog/" class="nav-link">Blog</a>
+      <button type="button" class="cart-btn" data-cart-open aria-label="View cart">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1 12H7L6 8Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
+        <span class="cart-badge"></span>
+      </button>
       <a href="https://wa.me/919560709231" target="_blank" rel="noopener" class="btn btn-solid">Order Fresh</a>
     </div>
   </nav>
@@ -92,6 +100,24 @@
     <a href="/" style="font-size:13px;color:#5A1628;text-decoration:none">Back to homepage</a>
   </div>
 </footer>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="cart-backdrop" id="cart-backdrop" data-cart-close></div>
+<div class="cart-drawer" id="cart-drawer" role="dialog" aria-label="Your cart" aria-hidden="true">
+  <div class="cart-drawer-header">
+    <h2>Your Cart</h2>
+    <button type="button" class="cart-close" data-cart-close aria-label="Close cart">&times;</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-drawer-footer" id="cart-footer">
+    <div class="cart-total-row">
+      <span class="label">Total</span>
+      <span class="amount" id="cart-total">₹0</span>
+    </div>
+    <button type="button" class="btn btn-solid cart-checkout-btn" data-cart-checkout>Checkout on WhatsApp</button>
+    <button type="button" class="cart-clear-btn" data-cart-clear>Clear cart</button>
+  </div>
+</div>
 
 <script src="../main.js" defer></script>
 </body>
