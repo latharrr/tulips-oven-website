@@ -1,25 +1,7 @@
 (function () {
   document.documentElement.classList.add('js');
 
-  // Hide header on scroll-down, show on scroll-up — rAF-throttled, transform-only (GPU, 60fps).
-  var header = document.querySelector('.site-header');
-  var lastY = window.scrollY;
-  var ticking = false;
-  function onScroll() {
-    var y = window.scrollY;
-    if (header) {
-      var hidden = y > lastY && y > 140;
-      header.classList.toggle('is-hidden', hidden);
-    }
-    lastY = y;
-    ticking = false;
-  }
-  window.addEventListener('scroll', function () {
-    if (!ticking) {
-      requestAnimationFrame(onScroll);
-      ticking = true;
-    }
-  }, { passive: true });
+  // Header stays fixed in place at all times — no hide-on-scroll.
 
   // Close the mobile nav <details> panel after tapping a link.
   var mobileNav = document.querySelector('.nav-mobile-details');
@@ -66,6 +48,27 @@
     });
   }
 
+  // Menu-card controls: swap "Add to Cart" for a +/- stepper once qty > 0.
+  function syncMenuControls() {
+    document.querySelectorAll('.cart-control[data-name]').forEach(function (el) {
+      var name = el.getAttribute('data-name');
+      var qty = cart[name] ? cart[name].qty : 0;
+      var addBtn = el.querySelector('[data-add-to-cart]');
+      var stepper = el.querySelector('.cart-stepper');
+      if (qty > 0) {
+        if (addBtn) addBtn.hidden = true;
+        if (stepper) {
+          stepper.hidden = false;
+          var qtyEl = stepper.querySelector('.qty-val');
+          if (qtyEl) qtyEl.textContent = qty;
+        }
+      } else {
+        if (addBtn) addBtn.hidden = false;
+        if (stepper) stepper.hidden = true;
+      }
+    });
+  }
+
   function renderCart() {
     var list = document.getElementById('cart-items');
     var footer = document.getElementById('cart-footer');
@@ -106,6 +109,7 @@
     saveCart(cart);
     updateBadges();
     renderCart();
+    syncMenuControls();
   }
 
   function changeQty(name, delta) {
@@ -115,6 +119,7 @@
     saveCart(cart);
     updateBadges();
     renderCart();
+    syncMenuControls();
   }
 
   function removeItem(name) {
@@ -122,6 +127,7 @@
     saveCart(cart);
     updateBadges();
     renderCart();
+    syncMenuControls();
   }
 
   function clearCart() {
@@ -129,6 +135,7 @@
     saveCart(cart);
     updateBadges();
     renderCart();
+    syncMenuControls();
   }
 
   function openCart() {
@@ -170,13 +177,6 @@
       var name = addBtn.getAttribute('data-name');
       var price = parseFloat(addBtn.getAttribute('data-price'));
       addToCart(name, price);
-      addBtn.classList.add('is-added');
-      var label = addBtn.textContent;
-      addBtn.textContent = 'Added ✓';
-      setTimeout(function () {
-        addBtn.classList.remove('is-added');
-        addBtn.textContent = label;
-      }, 1100);
       return;
     }
 
@@ -186,8 +186,8 @@
 
     var qtyBtn = e.target.closest('[data-cart-action]');
     if (qtyBtn) {
-      var row = qtyBtn.closest('.cart-row');
-      var itemName = row.getAttribute('data-name');
+      var wrapper = qtyBtn.closest('[data-name]');
+      var itemName = wrapper.getAttribute('data-name');
       var action = qtyBtn.getAttribute('data-cart-action');
       if (action === 'inc') changeQty(itemName, 1);
       else if (action === 'dec') changeQty(itemName, -1);
@@ -210,4 +210,5 @@
   });
 
   updateBadges();
+  syncMenuControls();
 })();
