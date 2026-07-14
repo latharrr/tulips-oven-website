@@ -11,9 +11,42 @@
     });
   }
 
+  // Photo-slot placeholders: hide a broken image, or hide its caption once it
+  // loads for real. error/load don't bubble, so this listens on the capture phase
+  // for any image that loads/errors after this script runs.
+  function hidePhotoSlotImg(img) { img.style.display = 'none'; }
+  function hidePhotoSlotCaption(img) {
+    var caption = img.nextElementSibling;
+    if (caption) caption.style.display = 'none';
+  }
+  document.addEventListener('error', function (e) {
+    if (e.target.tagName === 'IMG' && e.target.closest('.photo-slot')) hidePhotoSlotImg(e.target);
+  }, true);
+  document.addEventListener('load', function (e) {
+    if (e.target.tagName === 'IMG' && e.target.closest('.photo-slot')) hidePhotoSlotCaption(e.target);
+  }, true);
+  // This script is deferred, so an eager/cached image can finish loading (or
+  // fail) before the listeners above attach — catch that already-settled
+  // state directly instead of relying on the event alone.
+  document.querySelectorAll('.photo-slot img').forEach(function (img) {
+    if (!img.complete) return;
+    if (img.naturalWidth === 0) hidePhotoSlotImg(img);
+    else hidePhotoSlotCaption(img);
+  });
+
   // ================= CART =================
   var WA_NUMBER = '919560709231';
   var CART_KEY = 'tulipsOvenCart';
+
+  // All HTML built below is either a static template or built from escapeHtml()'d
+  // strings, so a passthrough Trusted Types policy is safe and satisfies a
+  // require-trusted-types-for 'script' CSP without pulling in a sanitizer.
+  var cartHtmlPolicy = (window.trustedTypes && trustedTypes.createPolicy)
+    ? trustedTypes.createPolicy('cart-html', { createHTML: function (s) { return s; } })
+    : null;
+  function setHtml(el, html) {
+    el.innerHTML = cartHtmlPolicy ? cartHtmlPolicy.createHTML(html) : html;
+  }
 
   function loadCart() {
     try {
@@ -75,12 +108,12 @@
     if (!list) return;
     var names = Object.keys(cart);
     if (names.length === 0) {
-      list.innerHTML = '<p class="cart-empty">Your cart is empty. <a href="' + (location.pathname.indexOf('/blog') === 0 ? '/' : '#menu') + '">Browse the menu</a> and add your favourites.</p>';
+      setHtml(list, '<p class="cart-empty">Your cart is empty. <a href="' + (location.pathname.indexOf('/blog') === 0 ? '/' : '#menu') + '">Browse the menu</a> and add your favourites.</p>');
       if (footer) footer.style.display = 'none';
       return;
     }
     if (footer) footer.style.display = '';
-    list.innerHTML = names.map(function (name) {
+    var rowsHtml = names.map(function (name) {
       var item = cart[name];
       return '' +
         '<div class="cart-row" data-name="' + escapeHtml(name) + '">' +
@@ -93,6 +126,7 @@
           '<button type="button" class="cart-row-remove" data-cart-action="remove" aria-label="Remove ' + escapeHtml(name) + '">×</button>' +
         '</div>';
     }).join('');
+    setHtml(list, rowsHtml);
     var totalEl = document.getElementById('cart-total');
     if (totalEl) totalEl.textContent = money(cartTotal());
   }
@@ -146,6 +180,7 @@
     backdrop.classList.add('is-open');
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
+    drawer.removeAttribute('inert');
     document.body.style.overflow = 'hidden';
   }
   function closeCart() {
@@ -155,6 +190,7 @@
     backdrop.classList.remove('is-open');
     drawer.classList.remove('is-open');
     drawer.setAttribute('aria-hidden', 'true');
+    drawer.setAttribute('inert', '');
     document.body.style.overflow = '';
   }
 
