@@ -1,0 +1,13 @@
+{
+  "name": "tulips-oven-website",
+  "version": "1.0.0",
+  "description": "Tulip's Oven - Home Bakery in Delhi",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Static site - open index.html'",
+    "build": "echo 'No build step required for static site'"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  }
+}
