@@ -403,3 +403,19 @@ details.nav-mobile-details > summary::-webkit-details-marker { display: none; }
 @media (min-width: 480px) {
   .cart-drawer { width: 380px; }
 }
+
+/* ================= NOT-LIVE NOTICE ================= */
+.notlive-backdrop {
+  position: fixed; inset: 0; z-index: 300; background: rgba(42,26,22,0.45);
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+}
+.notlive-backdrop[hidden] { display: none; }
+.notlive-card {
+  position: relative; width: 100%; max-width: 380px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px 24px 24px; text-align: center; color: var(--text);
+}
+.notlive-card h2 { font-family: var(--serif); font-size: 26px; font-weight: 600; color: var(--maroon); margin: 0 0 10px; }
+.notlive-card p { margin: 0 0 20px; line-height: 1.5; }
+.notlive-card .btn { font-size: 15px; padding: 14px 28px; }
+.notlive-card .notlive-hint { margin: 14px 0 0; font-size: 13px; color: rgba(42,42,42,0.7); }
+.notlive-close { position: absolute; top: 10px; right: 12px; }
