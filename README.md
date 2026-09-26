@@ -30,7 +30,7 @@ Then open `http://localhost:8080`.
 
 - **Domain**: `tulipsoven.com` is the confirmed domain — already used consistently in meta tags, canonical links, JSON-LD, and `sitemap.xml`.
 - **Photos**: all product/hero/gallery images are placeholder slots. Drop real photos into `images/` using the filenames listed in `images/README.txt`.
-- **WhatsApp ordering number** is already set to the real number (9560709231) across all order buttons and the JSON-LD contact field.
+- **Ordering is paused.** Every order button and cart checkout shows a "we're not live currently" notice and redirects to Instagram (@tulips.oven). No phone/WhatsApp number is published anywhere on the site.
 
 ## Deployment
 

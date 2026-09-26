@@ -35,7 +35,7 @@
   });
 
   // ================= CART =================
-  var WA_NUMBER = '919560709231';
+  var INSTAGRAM_URL = 'https://instagram.com/tulips.oven';
   var CART_KEY = 'tulipsOvenCart';
 
   // All HTML built below is either a static template or built from escapeHtml()'d
@@ -194,16 +194,36 @@
     document.body.style.overflow = '';
   }
 
-  function buildWhatsAppMessage() {
-    var names = Object.keys(cart);
-    var lines = ["Hi! I'd like to order:"];
-    names.forEach(function (name) {
-      var item = cart[name];
-      lines.push('- ' + name + ' x' + item.qty + ' - ' + money(item.qty * item.price));
-    });
-    lines.push('');
-    lines.push('Total: ' + money(cartTotal()));
-    return lines.join('\n');
+  // ================= NOT-LIVE NOTICE =================
+  // We aren't taking orders yet: every order button shows this notice, then
+  // sends the visitor to Instagram. Without JS the links go straight there.
+  var noticeTimer = null;
+  var notice = document.createElement('div');
+  notice.className = 'notlive-backdrop';
+  notice.setAttribute('role', 'dialog');
+  notice.setAttribute('aria-modal', 'true');
+  notice.setAttribute('aria-labelledby', 'notlive-title');
+  notice.hidden = true;
+  setHtml(notice,
+    '<div class="notlive-card">' +
+      '<button type="button" class="cart-close notlive-close" data-notlive-close aria-label="Close">&times;</button>' +
+      '<h2 id="notlive-title">We\'re not live currently</h2>' +
+      '<p>We aren\'t taking orders just yet. Follow us on Instagram for launch updates and new bakes.</p>' +
+      '<a class="btn btn-solid" href="' + INSTAGRAM_URL + '">Go to @tulips.oven</a>' +
+      '<p class="notlive-hint">Taking you to Instagram in a few seconds…</p>' +
+    '</div>');
+  document.body.appendChild(notice);
+
+  function showNotLiveNotice() {
+    closeCart();
+    notice.hidden = false;
+    notice.querySelector('.btn').focus();
+    clearTimeout(noticeTimer);
+    noticeTimer = setTimeout(function () { window.location.href = INSTAGRAM_URL; }, 3000);
+  }
+  function hideNotLiveNotice() {
+    clearTimeout(noticeTimer);
+    notice.hidden = true;
   }
 
   // Add-to-cart buttons (event delegation — works for any number of items).
@@ -235,16 +255,21 @@
 
     if (e.target.closest('[data-cart-checkout]')) {
       if (Object.keys(cart).length === 0) return;
-      var msg = buildWhatsAppMessage();
-      window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
-      clearCart();
-      closeCart();
+      showNotLiveNotice();
       return;
     }
+
+    if (e.target.closest('[data-order-link]')) {
+      e.preventDefault();
+      showNotLiveNotice();
+      return;
+    }
+
+    if (e.target.closest('[data-notlive-close]') || e.target === notice) { hideNotLiveNotice(); return; }
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeCart();
+    if (e.key === 'Escape') { closeCart(); hideNotLiveNotice(); }
   });
 
   updateBadges();
