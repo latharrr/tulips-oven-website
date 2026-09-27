@@ -3,6 +3,44 @@
 
   // Header stays fixed in place at all times — no hide-on-scroll.
 
+  // Mobile sticky order bar: wait until the hero (which has its own order
+  // button) has scrolled out of view. Without JS the bar is simply always shown.
+  var hero = document.querySelector('.hero');
+  if (hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      document.documentElement.classList.toggle('is-past-hero', !entries[0].isIntersecting);
+    }).observe(hero);
+  } else {
+    document.documentElement.classList.add('is-past-hero');
+  }
+
+  // The sticky order bar steps aside while the menu or The Brookie is on screen:
+  // both carry their own "Order on Instagram" CTA, and the bar must never cover a card.
+  var shopEls = document.querySelectorAll('#menu, .sig');
+  if (shopEls.length && 'IntersectionObserver' in window) {
+    var shopSeen = new Set();
+    var shopIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) shopSeen.add(en.target); else shopSeen.delete(en.target); });
+      document.documentElement.classList.toggle('in-shop', shopSeen.size > 0);
+    });
+    shopEls.forEach(function (el) { shopIo.observe(el); });
+  }
+
+  // Section headlines: each line rises from behind its mask when scrolled into view.
+  // The hidden state is only armed here, so without JS (or without motion) every
+  // headline is simply visible.
+  var risers = document.querySelectorAll('[data-rise]');
+  var motionOk = !window.matchMedia || window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  if (risers.length && motionOk && 'IntersectionObserver' in window) {
+    var riseIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('is-in'); riseIo.unobserve(en.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    risers.forEach(function (el) { riseIo.observe(el); });
+    document.documentElement.classList.add('rise-ready');
+  }
+
   // Close the mobile nav <details> panel after tapping a link.
   var mobileNav = document.querySelector('.nav-mobile-details');
   if (mobileNav) {
