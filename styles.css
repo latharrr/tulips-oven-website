@@ -1280,3 +1280,5 @@ html.js.is-past-hero .sticky-order-bar { transform: none; }
   .foot__mark span { display: block; }
   .foot__bottom { flex-direction: column; font-size: 13px; }
 }
+
+.foot__bottom a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
